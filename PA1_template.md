@@ -42,19 +42,19 @@ hist(act_sum
 ![](PA1_template_files/figure-html/1-1.png)<!-- -->
 
 ```r
-median(activity$interval)     #finding the median 
+median(act_sum)     #finding the median 
 ```
 
 ```
-## [1] 1177.5
+## [1] 10765
 ```
 
 ```r
-mean(activity$interval)       #finding the mean
+mean(act_sum)       #finding the mean
 ```
 
 ```
-## [1] 1177.5
+## [1] 10766.19
 ```
 
 
@@ -75,15 +75,75 @@ plot(steps1$step~steps1$interval
 ![](PA1_template_files/figure-html/2-1.png)<!-- -->
 
 ## Imputing missing values
-In this step we are trying to fill in all the NA with a value
+In this step we are trying to fill in all the NA with a value i,e. filling all the NA with the average of the values of step with respective to the interval removing NA while calculating averge.
 
 ```r
 missing <- read.csv("activity.csv")
 missing$date <- ymd(missing$date)
-sum(is.na(missing$steps))     #Total missing values in the data set
+dim(missing)
+```
+
+```
+## [1] 17568     3
+```
+
+```r
+sum(is.na(missing))     #Total missing values in the data set
 ```
 
 ```
 ## [1] 2304
+```
+
+```r
+for (i in 1:length(missing$steps)) {
+  if(is.na(missing$steps[i]))
+  {
+    missing$steps[i] <- mean(missing$steps[missing$interval==missing$interval[i]],na.rm = TRUE)
+  }
+  
+  
+}
+dim(missing)                  #dimension of data after filling in NA
+```
+
+```
+## [1] 17568     3
+```
+
+```r
+sum(is.na(missing))
+```
+
+```
+## [1] 0
+```
+
+```r
+missing_sum <- tapply(missing$steps,missing$date,sum)
+hist(missing_sum
+     ,col = "black"
+     ,breaks = 20
+     ,xlab = "steps"
+     ,ylab = "freq"
+     ,main = "histogram of number of steps")
+```
+
+![](PA1_template_files/figure-html/3-1.png)<!-- -->
+
+```r
+median(missing_sum)     #finding the median 
+```
+
+```
+## [1] 10766.19
+```
+
+```r
+mean(missing_sum)       #finding the mean
+```
+
+```
+## [1] 10766.19
 ```
 ## Are there differences in activity patterns between weekdays and weekends?

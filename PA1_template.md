@@ -19,17 +19,6 @@ library(lubridate)
 ## Warning: package 'lubridate' was built under R version 3.5.1
 ```
 
-```
-## 
-## Attaching package: 'lubridate'
-```
-
-```
-## The following object is masked from 'package:base':
-## 
-##     date
-```
-
 ```r
 activity <- read.csv("activity.csv")
 activity$date <- ymd(activity$date)
@@ -86,7 +75,15 @@ plot(steps1$step~steps1$interval
 ![](PA1_template_files/figure-html/2-1.png)<!-- -->
 
 ## Imputing missing values
+In this step we are trying to fill in all the NA with a value
 
+```r
+missing <- read.csv("activity.csv")
+missing$date <- ymd(missing$date)
+sum(is.na(missing$steps))     #Total missing values in the data set
+```
 
-
+```
+## [1] 2304
+```
 ## Are there differences in activity patterns between weekdays and weekends?

@@ -8,7 +8,7 @@ output:
 ---
 ## Loading and preprocessing the data
 In the following code we try to load the required packages,read the data from the csv file and clean the data
-```{r, echo=TRUE}
+```{r, echo=TRUE,message=FALSE}
 setwd("~/github/RepData_PeerAssessment1")
 #setwd("~/git/RepData_PeerAssessment1")
 library(lubridate)
@@ -48,7 +48,13 @@ plot(steps1$step~steps1$interval
 ```
 
 ## Imputing missing values
+In this step we are trying to fill in all the NA with a value
+```{r 3,echo=TRUE}
+missing <- read.csv("activity.csv")
+missing$date <- ymd(missing$date)
+sum(is.na(missing$steps))     #Total missing values in the data set
 
 
 
+```
 ## Are there differences in activity patterns between weekdays and weekends?

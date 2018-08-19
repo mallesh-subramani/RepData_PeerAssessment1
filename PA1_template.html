@@ -136,11 +136,6 @@ $(document).ready(function () {
 #setwd(&quot;~/git/RepData_PeerAssessment1&quot;)
 library(lubridate)</code></pre>
 <pre><code>## Warning: package 'lubridate' was built under R version 3.5.1</code></pre>
-<pre><code>## 
-## Attaching package: 'lubridate'</code></pre>
-<pre><code>## The following object is masked from 'package:base':
-## 
-##     date</code></pre>
 <pre class="r"><code>activity &lt;- read.csv(&quot;activity.csv&quot;)
 activity$date &lt;- ymd(activity$date)
 activity &lt;- activity[!is.na(activity$steps), ]</code></pre>
@@ -176,6 +171,11 @@ plot(steps1$step~steps1$interval
 </div>
 <div id="imputing-missing-values" class="section level2">
 <h2>Imputing missing values</h2>
+<p>In this step we are trying to fill in all the NA with a value</p>
+<pre class="r"><code>missing &lt;- read.csv(&quot;activity.csv&quot;)
+missing$date &lt;- ymd(missing$date)
+sum(is.na(missing$steps))     #Total missing values in the data set</code></pre>
+<pre><code>## [1] 2304</code></pre>
 </div>
 <div id="are-there-differences-in-activity-patterns-between-weekdays-and-weekends" class="section level2">
 <h2>Are there differences in activity patterns between weekdays and weekends?</h2>

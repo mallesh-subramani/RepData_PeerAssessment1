@@ -1,22 +1,49 @@
 ---
 title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
+author: "MALLESH SUBRAMANI M"
+date: "18 August 2018"
+output: html_document
 ---
-
-
 ## Loading and preprocessing the data
-
-
+In the following code we try to load the required packages,read the data from the csv file and clean the data
+```{r, echo=TRUE}
+setwd("~/github/RepData_PeerAssessment1")
+#setwd("~/git/RepData_PeerAssessment1")
+library(lubridate)
+activity <- read.csv("activity.csv")
+activity$date <- ymd(activity$date)
+activity <- activity[!is.na(activity$steps), ]
+```
 
 ## What is mean total number of steps taken per day?
+We use tapply function to find the sum of the steps with respect to the date and then use a histogram plot to plot the data
 
+```{r 1,echo=TRUE}
+act_sum <- tapply(activity$steps,activity$date,sum)
+hist(act_sum
+     ,col = "black"
+     ,breaks = 20
+     ,xlab = "steps"
+     ,ylab = "freq"
+     ,main = "histogram of number of steps")
+median(activity$interval)     #finding the median 
+mean(activity$interval)       #finding the mean
+
+```
 
 
 ## What is the average daily activity pattern?
-
-
+Finding the average of steps with respect to the interval and creating a time series plot
+```{r 2,echo=TRUE}
+steps <- tapply(activity$steps,activity$interval,mean)
+steps1 <- data.frame(step=steps,interval=as.numeric(names(steps)))
+rownames(steps1) <- (1:length(steps1$step))
+plot(steps1$step~steps1$interval
+     ,type="l"
+     ,col="red"
+     ,xlab="interval"
+     ,ylab="steps")
+```
 
 ## Imputing missing values
 

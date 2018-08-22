@@ -22,7 +22,6 @@ library(lubridate)
 ```r
 activity <- read.csv("activity.csv")
 activity$date <- ymd(activity$date)
-activity <- activity[!is.na(activity$steps), ]
 ```
 
 ## What is mean total number of steps taken per day?
@@ -30,7 +29,7 @@ We use tapply function to find the sum of the steps with respect to the date and
 
 
 ```r
-act_sum <- tapply(activity$steps,activity$date,sum)
+act_sum <- tapply(activity$steps,activity$date,sum,na.rm=TRUE)
 hist(act_sum
      ,col = "black"
      ,breaks = 20
@@ -42,19 +41,19 @@ hist(act_sum
 ![](PA1_template_files/figure-html/1-1.png)<!-- -->
 
 ```r
-median(act_sum)     #finding the median 
+median(act_sum,na.rm = TRUE)     #finding the median 
 ```
 
 ```
-## [1] 10765
+## [1] 10395
 ```
 
 ```r
-mean(act_sum)       #finding the mean
+mean(act_sum,na.rm = TRUE)       #finding the mean
 ```
 
 ```
-## [1] 10766.19
+## [1] 9354.23
 ```
 
 
@@ -62,7 +61,7 @@ mean(act_sum)       #finding the mean
 Finding the average of steps with respect to the interval and creating a time series plot
 
 ```r
-steps <- tapply(activity$steps,activity$interval,mean)
+steps <- tapply(activity$steps,activity$interval,mean,na.rm=TRUE)
 steps1 <- data.frame(step=steps,interval=as.numeric(names(steps)))
 rownames(steps1) <- (1:length(steps1$step))
 plot(steps1$step~steps1$interval
@@ -101,7 +100,8 @@ for (i in 1:length(missing$steps)) {
   {
     missing$steps[i] <- mean(missing$steps[missing$interval==missing$interval[i]],na.rm = TRUE)
   }
-  
+  else
+    missing$steps[i] <- missing$steps[i]
   
 }
 dim(missing)                  #dimension of data after filling in NA
@@ -146,4 +146,23 @@ mean(missing_sum)       #finding the mean
 ```
 ## [1] 10766.19
 ```
+It can be seen that the mean and median values are increased after imputing, because the NA values present in the original data set is replaced with a more meaningfull values.
 ## Are there differences in activity patterns between weekdays and weekends?
+
+```r
+day_type <- function(date){
+  day <- weekdays(date)
+  if(day%in%c("Monday","Tuesday","Wednesday","Thursday","Friday"))
+  return("weekday")
+  else if(day%in%c("Saturday","Sunday"))
+  return("weekend")
+}
+missing$date <- as.Date(missing$date)
+missing$day <- sapply(missing$date,day_type)
+day_sum <- aggregate(steps~interval+day,data = missing,mean)
+par(mfrow=c(1,2))
+plot(day_sum$interval[day_sum$day=="weekday"],day_sum$steps[day_sum$day=="weekday"],type = "l",col="red",main = "weekday",xlab = "5-min interval",ylab = "number of steps")
+plot(day_sum$interval[day_sum$day=="weekend"],day_sum$steps[day_sum$day=="weekend"],type = "l",col="red",main = "weekend",xlab = "5-min interval",ylab = "number of steps",ylim = c(0,200))
+```
+
+![](PA1_template_files/figure-html/4-1.png)<!-- -->
